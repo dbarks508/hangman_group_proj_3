@@ -26,11 +26,26 @@ function websocket(server) {
       console.log(message.toString());
       try {
         const data = JSON.parse(message);
-        console.log(`data.type: ${data.type} || data.guess: ${data.guess}`);
+        console.log(
+          `data.type: ${data.type} || data.guess: ${data.guess} || data.guess: ${data.role}`
+        );
 
         if (data.type === "join") {
-          players.push(data.player);
-          console.log("player added");
+          if (players.length == 0) {
+            playerObject = {
+              player: data.player,
+              role: "host",
+            };
+            players.push(playerObj);
+            console.log("player added, host set");
+          } else {
+            playerObject = {
+              player: data.player,
+              role: "guesser",
+            };
+            players.push(data.player);
+            console.log("player added, guesser set");
+          }
         }
 
         if (data.type === "guess") {
