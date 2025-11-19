@@ -37,14 +37,12 @@ function websocket(server) {
           const g = data.guess;
           let repeated = false;
 
-          for (let guess in guesses) {
-            if (guesses.includes(g)) {
-              ws.send(
-                JSON.stringify({ message: "Already guessed letter: " + g })
-              );
-              console.log("repeated guess");
-              repeated = true;
-            }
+          if (guesses.includes(g)) {
+            ws.send(
+              JSON.stringify({ message: "Already guessed letter: " + g })
+            );
+            console.log("repeated guess");
+            repeated = true;
           }
 
           if (!repeated) {

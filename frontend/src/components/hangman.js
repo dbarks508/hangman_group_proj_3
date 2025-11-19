@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 export default function Hangman() {
   const navigate = useNavigate();
+  const [ws, setWs] = useState(null);
 
   const [errorMessage, setErrorMessage] = useState("");
   const [form, setForm] = useState({
