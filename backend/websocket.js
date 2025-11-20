@@ -41,7 +41,7 @@ function websocket(server) {
                 message: `${data.player} has joined as host`,
               })
             );
-          } else {
+          } else if (data.player != players[0].player) {
             playerObject = {
               player: data.player,
               role: "guesser",

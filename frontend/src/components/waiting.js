@@ -39,8 +39,8 @@ export default function Waiting() {
         // get player data and sent
         const gameState = {
           type: "join",
-          player: player,
-          word: word,
+          player: data.player,
+          word: data.word,
         };
         websocket.send(JSON.stringify(gameState));
         intevalRef.current = setInterval(() => {
