@@ -26,28 +26,39 @@ function websocket(server) {
       console.log(message.toString());
       try {
         const data = JSON.parse(message);
-        console.log(
-          `data.type: ${data.type} || data.guess: ${data.guess} || data.guess: ${data.role}`
-        );
 
+        // state type joing sent from waiting room
         if (data.type === "join") {
           if (players.length == 0) {
             playerObject = {
               player: data.player,
               role: "host",
             };
-            players.push(playerObj);
+            players.push(playerObject);
             console.log("player added, host set");
+            wss.broadcast(
+              JSON.stringify({
+                message: `${data.player} has joined as host`,
+              })
+            );
           } else {
             playerObject = {
               player: data.player,
               role: "guesser",
             };
-            players.push(data.player);
+            players.push(playerObject);
             console.log("player added, guesser set");
+            wss.broadcast(
+              JSON.stringify({
+                message: `${data.player} has joined as guesser`,
+              })
+            );
           }
+
+          // save guessed words TODO
         }
 
+        // game state guess sent from hangman.js
         if (data.type === "guess") {
           const g = data.guess;
           let repeated = false;
