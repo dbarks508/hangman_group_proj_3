@@ -29,10 +29,18 @@ function websocket(server) {
 
         // state type joing sent from waiting room
         if (data.type === "join") {
+          const existing = players.find((p) => p.player === data.player);
+          if (existing) {
+            existing.ws = ws;
+            console.log("player reonnected");
+            return;
+          }
+
           if (players.length == 0) {
-            playerObject = {
+            const playerObject = {
               player: data.player,
               role: "host",
+              ws: ws,
             };
             players.push(playerObject);
             console.log("player added, host set");
@@ -42,9 +50,10 @@ function websocket(server) {
               })
             );
           } else if (data.player != players[0].player) {
-            playerObject = {
+            const playerObject = {
               player: data.player,
               role: "guesser",
+              ws: ws,
             };
             players.push(playerObject);
             console.log("player added, guesser set");
