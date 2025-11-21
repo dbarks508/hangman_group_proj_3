@@ -2,47 +2,74 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 export default function Welcome() {
+  // vars and states
   const navigate = useNavigate();
-  const [ws, setWs] = useState(null);
-
   const [errorMessage, setErrorMessage] = useState("");
   const [form, setForm] = useState({
     player: "",
     word: "",
+    random: false,
   });
 
+  // form update helper
   function updateForm(jsonObj) {
     return setForm((prevJsonObj) => {
       return { ...prevJsonObj, ...jsonObj };
     });
   }
 
+  // function triggered by user submit
   async function onSubmit(e) {
     e.preventDefault();
 
-    const playerData = {
-      player: form.player,
-      guess: form.guess,
-    };
-    const responce = await fetch("http://localhost:4000/init-game", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(playerData),
-    });
+    let data;
+    let playerData = {};
 
-    const data = await responce.json();
+    if (form.random) {
+      // player object from form data without chosen word
+      playerData = {
+        player: form.player,
+      };
 
+      // send player data to back end for session use
+      const responce = await fetch("http://localhost:4000/init-game-random", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(playerData),
+      });
+
+      // get and handle responce
+      data = await responce.json();
+    } else {
+      // player object from form data
+      playerData = {
+        player: form.player,
+        word: form.word,
+      };
+
+      // send player data to back end for session use
+      const responce = await fetch("http://localhost:4000/init-game", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(playerData),
+      });
+
+      // get and handle responce
+      data = await responce.json();
+    }
+
+    // confirm session set correctly
     if (data.message === "session set") {
       console.log("Data recieved from route /init-game: ", data);
       navigate("/waiting");
     } else {
       setErrorMessage("Problem setting session data.");
     }
-
-    // TODO
   }
 
+  // display
   return (
     <div className="body">
       <h1>Welcome to hangman!</h1>
@@ -63,9 +90,19 @@ export default function Welcome() {
           <input
             type="text"
             id="word"
+            placeholder="Type here if you dont want a rondomly generated word"
             value={form.word}
             onChange={(e) => updateForm({ word: e.target.value })}
             required
+          />
+        </div>
+        <div>
+          <label>Random word: </label>
+          <input
+            type="checkbox"
+            id="random"
+            checked={form.random}
+            onChange={(e) => updateForm({ random: e.target.checked })}
           />
         </div>
         <br />
