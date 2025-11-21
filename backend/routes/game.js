@@ -15,6 +15,30 @@ gameRoutes.post("/init-game", (req, res) => {
   res.send({ message: "session set" });
 });
 
+gameRoutes.post("/init-game-random", async (req, res) => {
+  const { player } = req.body;
+
+  if (!player) {
+    return res.status(400).send("no player data");
+  }
+
+  // get random word from db
+  let db = dbo.getDB();
+  const randomWordCollection = db.collection("random_words");
+  const randomWord = await randomWordCollection
+    .aggregate([{ $sample: { size: 1 } }])
+    .toArray();
+
+  req.session.player = player;
+  req.session.word = randomWord[0].word;
+
+  console.log(
+    `Session player and word: ${req.session.player} | ${req.session.word}`
+  );
+
+  res.send({ message: "session set" });
+});
+
 gameRoutes.get("/verify", (req, res) => {
   let status = "";
   if (!req.session.player) {
@@ -29,6 +53,10 @@ gameRoutes.get("/verify", (req, res) => {
     player: req.session.player,
     word: req.session.word,
   };
+
+  console.log(
+    `Session player and word: ${req.session.player} | ${req.session.word}`
+  );
 
   res.json(data);
 });

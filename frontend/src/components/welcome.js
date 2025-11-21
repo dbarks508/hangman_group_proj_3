@@ -90,10 +90,9 @@ export default function Welcome() {
           <input
             type="text"
             id="word"
-            placeholder="Type here if you dont want a rondomly generated word"
+            placeholder="non-random type here"
             value={form.word}
             onChange={(e) => updateForm({ word: e.target.value })}
-            required
           />
         </div>
         <div>

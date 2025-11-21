@@ -32,7 +32,7 @@ function websocket(server) {
           const existing = players.find((p) => p.player === data.player);
           if (existing) {
             existing.ws = ws;
-            console.log("player reonnected");
+            console.log("player reconnected");
             return;
           }
 
