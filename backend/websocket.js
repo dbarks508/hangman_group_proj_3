@@ -47,9 +47,10 @@ function websocket(server) {
             wss.broadcast(
               JSON.stringify({
                 message: `${data.player} has joined as host`,
+                action: "wait",
               })
             );
-          } else if (data.player != players[0].player) {
+          } else if (data.player != players[0].player && players.length < 2) {
             const playerObject = {
               player: data.player,
               role: "guesser",
@@ -60,6 +61,7 @@ function websocket(server) {
             wss.broadcast(
               JSON.stringify({
                 message: `${data.player} has joined as guesser`,
+                action: "hangman",
               })
             );
           }

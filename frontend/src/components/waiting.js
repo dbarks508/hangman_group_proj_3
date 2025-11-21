@@ -42,15 +42,32 @@ export default function Waiting() {
           player: data.player,
           word: data.word,
         };
+
         websocket.send(JSON.stringify(gameState));
         intevalRef.current = setInterval(() => {
           setDots((prev) => moveDots(prev));
-        }, 500);
+        }, 800);
       };
 
       // set messages as they come in
       websocket.onmessage = (event) => {
-        setMessage((prevMessage) => [...prevMessage, event.data]);
+        try {
+          const data = JSON.parse(event.data);
+          setMessage((prevMessage) => [...prevMessage, data.message]);
+
+          // two players have been added
+          if (data.action === "hangman") {
+            // clear dots interval
+            clearInterval(intevalRef.current);
+
+            // nav to hangman
+            setTimeout(() => {
+              navigate("/hangman");
+            }, 3000);
+          }
+        } catch (err) {
+          console.log("error parsing data");
+        }
       };
 
       websocket.onclose = () => {
@@ -67,11 +84,6 @@ export default function Waiting() {
     };
   }, []);
 
-  function toGame() {
-    navigate("/hangman");
-    clearInterval(intevalRef.current);
-  }
-
   function moveDots(d) {
     if (d === "") return ".";
     if (d === ".") return "..";
@@ -83,7 +95,7 @@ export default function Waiting() {
     <div>
       <h1>Waiting room</h1>
       <p>Waiting for players to join{dots}</p>
-      <p>{message}</p>
+      <p>{message.join(", ")}</p>
     </div>
   );
 }
