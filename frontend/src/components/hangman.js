@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 
+import Tally from "./tally.js";
+
 export default function Hangman() {
   const navigate = useNavigate();
   const [ws, setWs] = useState(null);
@@ -227,6 +229,7 @@ export default function Hangman() {
         <br></br>
         <h2>{displayWord || "Loading word..."}</h2>
         <br></br>
+        <Tally count={guessCounter}/>
         <p id="guesses">Guessed letters: {guesses.join(", ")}</p>
         <br></br>
       </div>
