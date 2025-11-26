@@ -211,9 +211,56 @@ function websocket(server) {
             // Check if word is complete
             const wordComplete = displayWord.indexOf("_") === -1;
 
+            // log game result to database if complete
+            if (wordComplete) {
+              console.log("Word guessed! Logging game result to database...");
+              (async () => {
+                try {
+                  let db = dbo.getDB();
+                  const gameCollection = db.collection("game_data");
+                  const newGameRecord = {
+                    userID: data.player,
+                    Name: data.player,
+                    phraseGuessed: wordToGuess,
+                    numberOfGuesses: guesses.length,
+                    fromDatabaseOrCustom: hasSwapped ? "custom" : "database",
+                    successfulOrNot: "successful",
+                  };
+                  const result = await gameCollection.insertOne(newGameRecord);
+                  console.log("Game record inserted with _id: ", result.insertedId);
+                } catch (err) {
+                  console.error("Error inserting game record: ", err);
+                }
+              })();
+            }
+            else if (guesses.length >= 6) {
+              console.log("Max guesses reached! Logging game result to database...");
+              (async () => {
+                try {
+                  let db = dbo.getDB();
+                  const gameCollection = db.collection("game_data");
+                  const newGameRecord = {
+                    userID: data.player,
+                    Name: data.player,
+                    phraseGuessed: wordToGuess,
+                    numberOfGuesses: guesses.length,
+                    fromDatabaseOrCustom: hasSwapped ? "custom" : "database",
+                    successfulOrNot: "unsuccessful",
+                  };
+                  const result = await gameCollection.insertOne(newGameRecord);
+                  console.log("Game record inserted with _id: ", result.insertedId);
+                } catch (err) {
+                  console.error("Error inserting game record: ", err);
+                }
+              })();
+            }
+
             // if word is complete and we've already swapped, send end game signal
             if (wordComplete && hasSwapped) {
               console.log("Word guessed! Game over.");
+
+              
+
               wss.broadcast(
                 JSON.stringify({
                   type: "end",
@@ -227,6 +274,8 @@ function websocket(server) {
               );
               return;
             }
+
+            // if user is out of guesses
 
             wss.broadcast(
               JSON.stringify({
