@@ -39,6 +39,45 @@ gameRoutes.post("/init-game-random", async (req, res) => {
   res.send({ message: "session set" });
 });
 
+gameRoutes.route("/postScores").post(async (req, res) => {
+  try {
+    const {
+      userId,
+      Name,
+      phraseGuessed,
+      numberOfGuesses,
+      fromDatabaseOrCustom,
+      successfulOrNot,
+    } = req.body;
+
+    let db = dbo.getDB();
+    const gameCollection = db.collection("game_data");
+
+    const scoreObject = {
+      userID: userId,
+      Name: Name,
+      phraseGuessed: phraseGuessed,
+      numberOfGuesses: numberOfGuesses,
+      fromDatabaseOrCustom: fromDatabaseOrCustom,
+      successfulOrNot: successfulOrNot,
+    };
+
+    const result = await gameCollection.insertOne(scoreObject);
+
+    if (result.acknowledged) {
+      return res.status(201).json({
+        message: "Score successfully saved",
+        id: result.insertedId,
+      });
+    } else {
+      return res.status(500).json({ message: "Database insertion failed" });
+    }
+  } catch (err) {
+    console.error("Backend posting scores error:", err);
+    return res.status(500).json({ message: "Server error inserting score" });
+  }
+});
+
 gameRoutes.get("/verify", (req, res) => {
   let status = "";
   if (!req.session.player) {
@@ -60,6 +99,5 @@ gameRoutes.get("/verify", (req, res) => {
 
   res.json(data);
 });
-
 
 module.exports = gameRoutes;
