@@ -77,7 +77,7 @@ export default function Hangman() {
             setDisplayWord(msg.displayWord);
             console.log("Game ended, navigating to scores...");
             setTimeout(() => {
-              navigate("/scores");
+              navigate("/dashboard");
             }, 5000);
           }
 
@@ -95,7 +95,7 @@ export default function Hangman() {
               if (hasSwapped) {
                 console.log("Word guessed! Navigating to scores...");
                 setTimeout(() => {
-                  navigate("/scores");
+                  navigate("/dashboard");
                 }, 5000);
               }
               // otherwise play second round

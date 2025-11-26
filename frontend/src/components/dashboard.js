@@ -16,7 +16,7 @@ export default function Dashboard() {
         });
 
         const data = await response.json();
-        
+
         if (data.leaderboard) {
           setLeaderboardData(data.leaderboard);
         }
@@ -31,17 +31,13 @@ export default function Dashboard() {
   return (
     <div className="background">
       <div className="container">
-        
         <header className="header">
           <h1>Game Leaderboard</h1>
-          <p>
-            Ranked by least guesses
-          </p>
+          <p>Ranked by least guesses</p>
         </header>
 
         {/* Main Content */}
         <section className="dashboard-content">
-          
           <div className="table-container">
             <div className="table-header-row">
               <div className="col">Rank</div>
@@ -53,30 +49,34 @@ export default function Dashboard() {
             </div>
 
             <div className="table-body">
-                {/* If there is no data in the database - Return error text */}
+              {/* If there is no data in the database - Return error text */}
               {leaderboardData.length === 0 ? (
-                <p style={{ padding: "1rem", textAlign: "center" }}>No games played yet.</p>
+                <p style={{ padding: "1rem", textAlign: "center" }}>
+                  No games played yet.
+                </p>
               ) : (
                 // Getting data and assigning it to the leaderboard rows
                 leaderboardData.map((game, index) => (
                   <div className="table-row" key={index}>
                     <div className="col">
-                        <span className="rank-badge">#{index + 1}</span>
+                      <span className="rank-badge">#{index + 1}</span>
                     </div>
                     <div className="col">{game.Name}</div>
                     <div className="col">{game.phraseGuessed}</div>
                     <div className="col">
-                        <span className="tag">{game.fromDatabaseOrCustom}</span>
+                      <span className="tag">{game.fromDatabaseOrCustom}</span>
+                    </div>
+                    <div className="col">
+                      {game.successfulOrNot ? "Success" : "Failed"}
                     </div>
                     <div className="col text-right font-large">
-                        {game.numberOfGuesses}
+                      {game.numberOfGuesses}
                     </div>
                   </div>
                 ))
               )}
             </div>
           </div>
-
         </section>
       </div>
     </div>
