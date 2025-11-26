@@ -62,7 +62,7 @@ function websocket(server) {
 
           if (players.length == 0) {
             // set word on host join
-            if (data.word && !wordToGuess) {
+            if (data.word) {
               wordToGuess = data.word;
               displayWord = "_".repeat(wordToGuess.length);
               console.log("word set on reconnect: " + wordToGuess);
