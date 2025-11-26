@@ -15,32 +15,22 @@ dashboardRoutes.route("/leaderboard").get(async (req, res) => {
       .sort({ numberOfGuesses: 1 })
       .toArray();
 
-    // Check if data exists
-    if (!gameData || gameData.length === 0) {
-      console.log("[Backend] No game data found.");
-      return res.json({ leaderboard: [] });
-    }
-
-    // Debugging
-    console.log(`[Backend] Found ${gameData.length} game records`);
-
     // Creating a list to put it all into
-    let formattedLeaderboard = [];
-
-    gameData.forEach((game) => {
-      // Pushing only the requested fields
-      formattedLeaderboard.push({
+    const formattedLeaderboard = gameData.map((game) => {
+      return {
+        // Converting Mongo ID to string just in case React needs a key
+        id: game._id.toString(),
         userID: game.userID,
-        Name: game.Name,
+        Name: game.Name, // Using Capital N as seen in your DB screenshot
         phraseGuessed: game.phraseGuessed,
         numberOfGuesses: game.numberOfGuesses,
         fromDatabaseOrCustom: game.fromDatabaseOrCustom,
         successfulOrNot: game.successfulOrNot,
-      });
+      };
     });
 
     // Sending to frontend
-    return res.json({ leaderboard: formattedLeaderboard });
+    res.json({ leaderboard: formattedLeaderboard });
   } catch (err) {
     console.error("Error in /leaderboard:", err);
     res.status(500).json({ error: "Failed to fetch leaderboard information" });

@@ -76,20 +76,3 @@
     font-weight: 700;
     color: #ffffff;
 }
-
-/* Badges and Status Colors */
-/* Test this when data is in the database */
-.rank-badge {
-    background-color: #2563eb; /* Matches btn-primary */
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.8rem;
-}
-/* Test this when data is in the database */
-.tag {
-    background-color: #111827;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    font-size: 0.75rem;
-    color: #9ca3af;
-}

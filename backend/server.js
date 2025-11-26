@@ -36,6 +36,7 @@ app.use(
   })
 );
 
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const dbo = require("./db/conn");
 const { json } = require("stream/consumers");
 
@@ -44,6 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // ----- routes -----
 app.use(require("./routes/game"));
+app.use(dashboardRoutes);
 
 // connect websocket.js
 const websocket = require("./websocket");

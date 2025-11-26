@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 import "./dashboard.css";
 
 export default function Dashboard() {
   const [leaderboardData, setLeaderboardData] = useState([]);
-  const navigate = useNavigate();
 
   // Fetch Leaderboard Data on Load
   useEffect(() => {
