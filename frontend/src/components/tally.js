@@ -15,7 +15,7 @@ export default function Tally({count}){
 	let delta = lineWidth + lineSpace;
 	for(let i = 0; i < count; i++){
 		let l;
-		if((i + 1) % 5 == 0){
+		if((i + 1) % 5 === 0){
 			l = line(
 				margin + delta * (i - 4), height - (margin + 10),
 				delta * i + lineSpace + lineWidth / 2, margin + 10

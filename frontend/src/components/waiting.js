@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"; 
+import "./styles.css";
 
 export default function Waiting() {
   const [dots, setDots] = useState(".");
